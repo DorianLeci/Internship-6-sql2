@@ -1,7 +1,8 @@
 import AutoDirectory
 import json
+from psycopg2.extras import execute_values
 
-def country_insert(cur,count=1000):
+def country_insert(cur):
     cur.execute("SELECT COUNT(*) FROM country")
 
     if(cur.fetchone()[0]==0):
@@ -10,4 +11,4 @@ def country_insert(cur,count=1000):
 
         insert_values=[(c["country_name"],) for c in country]
 
-        cur.executemany("INSERT INTO public.country (country_name) VALUES (%s)",insert_values)  
+        execute_values(cur,"INSERT INTO public.country (country_name) VALUES %s",insert_values)  

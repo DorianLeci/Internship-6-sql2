@@ -1,8 +1,16 @@
 import psycopg2
 import EntityScripts.Country as Country
+import EntityScripts.Location as Location
+import EntityScripts.Player as Player
+import Helper.GetCountryList as GetCountryList
 
 def get_data(cur):
     Country.country_insert(cur)
+
+    country_id_list=GetCountryList.GetList(cur)
+
+    Location.location_insert(cur,country_id_list)
+    Player.player_insert(cur,country_id_list)
 
 
 
