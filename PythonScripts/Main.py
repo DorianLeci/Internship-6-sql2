@@ -2,6 +2,7 @@ import psycopg2
 import EntityScripts.Country as Country
 import EntityScripts.Location as Location
 import EntityScripts.Player as Player
+import EntityScripts.Referee as Referee
 import Helper.GetCountryList as GetCountryList
 
 def get_data(cur):
@@ -11,6 +12,7 @@ def get_data(cur):
 
     Location.location_insert(cur,country_id_list)
     Player.player_insert(cur,country_id_list)
+    Referee.referee_insert(cur,country_id_list)
 
 
 
