@@ -3,7 +3,11 @@ import EntityScripts.Country as Country
 import EntityScripts.Location as Location
 import EntityScripts.Player as Player
 import EntityScripts.Referee as Referee
+import EntityScripts.Team as Team
+from EntityScripts.TeamPlayer import team_player_insert 
 import Helper.GetCountryList as GetCountryList
+import traceback
+
 
 def get_data(cur):
     Country.country_insert(cur)
@@ -13,6 +17,9 @@ def get_data(cur):
     Location.location_insert(cur,country_id_list)
     Player.player_insert(cur,country_id_list)
     Referee.referee_insert(cur,country_id_list)
+    Team.team_insert(cur,country_id_list)
+    team_player_insert(cur)
+
 
 
 
@@ -26,6 +33,7 @@ try:
 except Exception as e:
     conn.rollback()
     print("Došlo je do greške, svi unosi su poništeni:", e)
+    traceback.print_exc()
 
 finally:
     cur.close()
