@@ -72,8 +72,7 @@ ADD CONSTRAINT team_player_unique UNIQUE(team_id,player_id);
 
 CREATE TABLE tournament(
 	tournament_id SERIAL PRIMARY KEY,
-	name VARCHAR(30) NOT NULL,
-	foundation_year INT NOT NULL,
+	name VARCHAR(60) NOT NULL,
 	description TEXT
 );
 
@@ -92,8 +91,36 @@ CREATE TABLE match_type(
 	phase tournament_phase NOT NULL,
 	number_of_teams INT NOT NULL,
 
-	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id)
+	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id) ON DELETE CASCADE
 	
+);
+
+CREATE TABLE team_tournament_edition(
+	team_id INT NOT NULL REFERENCES team(team_id),
+	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id),
+
+	UNIQUE(team_id,tournament_edition_id),
+
+	number_of_wins INT DEFAULT 0,
+	ranking INT DEFAULT NULL,
+	stage_reached tournament_phase DEFAULT NULL
+);
+
+CREATE TABLE tournament_match(
+	match_id SERIAL PRIMARY KEY,
+	date_time TIMESTAMP NOT NULL,
+
+	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id)
+);
+
+CREATE TABLE match_team(
+	match_team_id SERIAL PRIMARY KEY,
+	match_id INT NOT NULL REFERENCES tournament_match(match_id),
+	team_id INT NOT NULL REFERENCES team(team_id),
+	
+	UNIQUE(match_id,team_id),
+	
+	score INT NOT NULL
 );
 
 

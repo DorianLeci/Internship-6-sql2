@@ -7,9 +7,11 @@ import EntityScripts.Team as Team
 import EntityScripts.Tournament as Tournament
 import EntityScripts.TournamentEdition as TournamentEdition
 import EntityScripts.MatchType as MatchType
+from EntityScripts.TeamTournament import team_tour_insert
 
 from EntityScripts.TeamPlayer import team_player_insert 
 import Helper.GetCountryList as GetCountryList
+import Helper.GetTeamList as GetTeamList
 import traceback
 
 
@@ -19,14 +21,23 @@ def get_data(cur):
     country_id_list=GetCountryList.GetList(cur)
 
     Location.location_insert(cur,country_id_list)
+
     Player.player_insert(cur,country_id_list)
+
     Referee.referee_insert(cur,country_id_list)
+
     Team.team_insert(cur,country_id_list)
-    team_player_insert(cur)
+
+    team_id_list=GetTeamList.GetList(cur)
+    team_player_insert(cur,team_id_list)
 
     Tournament.tournament_insert(cur)
     TournamentEdition.tournament_edition_insert(cur)
+
     MatchType.match_type_insert(cur)
+
+    team_tour_insert(cur,team_id_list)
+
 
 
 

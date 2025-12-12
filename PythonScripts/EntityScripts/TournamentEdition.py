@@ -22,7 +22,7 @@ def tournament_edition_insert(cur):
         insert_values=[]
 
         for tid in tournament_id_list:
-            availible_years = list(range(2011, 2026))
+            availible_years = list(range(2020, 2026))
             location_id=random.choice(location_id_list)
             tournament_id=random.choice(tournament_id_list)
 
@@ -30,7 +30,8 @@ def tournament_edition_insert(cur):
             
             tournament_duration=random.randint(MIN_DURATION,MAX_DURATION)
 
-            for _ in range(1,10):
+            number_of_editions=random.randint(1,6)
+            for _ in range(number_of_editions):
                 
                 year=random.choice(availible_years)
                 availible_years.remove(year)
@@ -44,8 +45,15 @@ def tournament_edition_insert(cur):
 
                 end_date = start_date + timedelta(days=tournament_duration-1)
 
-                num_of_teams=random.choice([8,16,32,64])
+                num_of_teams=random.choice([8,16,32])
 
                 insert_values.append((start_date,end_date,num_of_teams,tournament_id,location_id))
 
         execute_values(cur,"INSERT INTO public.tournament_edition (start_date,end_date,num_of_teams,tournament_id,location_id) VALUES %s",insert_values)  
+
+        cur.execute(""" DELETE FROM tournament_edition WHERE tournament_edition_id IN
+                        (SELECT tournament_edition_id
+                         FROM team_tournament_edition
+                         GROUP BY tournament_edition_id
+                         HAVING COUNT(*) NOT IN (4,8,16,32)
+                         )""")

@@ -1,7 +1,6 @@
 from enum import Enum
 class MatchType(Enum):
     GROUP_STAGE="group_stage"
-    ROUND_OF_64="round_of_64"
     ROUND_OF_32="round_of_32"
     ROUND_OF_16="round_of_16"
     QUARTERFINAL="quarterfinal"
@@ -13,7 +12,6 @@ def generate_match_type(num_of_teams,include_group_stage=True,include_third_plac
 
     KNOCKOUT_ORDER = [
     MatchType.GROUP_STAGE,
-    MatchType.ROUND_OF_64,
     MatchType.ROUND_OF_32,
     MatchType.ROUND_OF_16,
     MatchType.QUARTERFINAL,
@@ -28,9 +26,6 @@ def generate_match_type(num_of_teams,include_group_stage=True,include_third_plac
     if(include_group_stage):
         phase_list.append(MatchType.GROUP_STAGE)
         num_teams_after_group_stage=num_teams_after_group_stage/2
-
-    if num_teams_after_group_stage==64:
-        start_phase=(MatchType.ROUND_OF_64)
 
     if num_teams_after_group_stage==32:
         start_phase=(MatchType.ROUND_OF_32)

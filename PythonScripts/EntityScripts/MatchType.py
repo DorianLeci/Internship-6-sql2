@@ -22,7 +22,6 @@ def match_type_insert(cur):
             phase_list=Generator.generate_match_type(num_of_teams,include_group_stage,include_third_place_match)
 
             for phase in phase_list:
-                print("Phase: ",phase.value)
                 insert_values.append((phase.value,num_of_teams,edition_id))
 
                 if(phase!=Generator.MatchType.THIRD_PLACE and phase!=Generator.MatchType.FINAL):
