@@ -109,7 +109,8 @@ CREATE TABLE team_tournament_edition(
 CREATE TABLE tournament_match(
 	match_id SERIAL PRIMARY KEY,
 	date_time TIMESTAMP NOT NULL,
-
+	
+    match_type_id INT REFERENCES match_type(match_type_id),
 	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id)
 );
 
