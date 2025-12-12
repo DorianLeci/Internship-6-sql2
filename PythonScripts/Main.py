@@ -4,6 +4,8 @@ import EntityScripts.Location as Location
 import EntityScripts.Player as Player
 import EntityScripts.Referee as Referee
 import EntityScripts.Team as Team
+import EntityScripts.Tournament as Tournament
+
 from EntityScripts.TeamPlayer import team_player_insert 
 import Helper.GetCountryList as GetCountryList
 import traceback
@@ -19,6 +21,8 @@ def get_data(cur):
     Referee.referee_insert(cur,country_id_list)
     Team.team_insert(cur,country_id_list)
     team_player_insert(cur)
+
+    Tournament.tournament_insert(cur)
 
 
 
