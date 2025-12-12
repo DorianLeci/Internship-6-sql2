@@ -44,7 +44,8 @@ def tournament_edition_insert(cur):
 
                 end_date = start_date + timedelta(days=tournament_duration-1)
 
+                num_of_teams=random.choice([8,16,32,64])
 
-                insert_values.append((start_date,end_date,tournament_id,location_id))
+                insert_values.append((start_date,end_date,num_of_teams,tournament_id,location_id))
 
-        execute_values(cur,"INSERT INTO public.tournament_edition (start_date,end_date,tournament_id,location_id) VALUES %s",insert_values)  
+        execute_values(cur,"INSERT INTO public.tournament_edition (start_date,end_date,num_of_teams,tournament_id,location_id) VALUES %s",insert_values)  

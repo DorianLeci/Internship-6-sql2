@@ -6,6 +6,7 @@ import EntityScripts.Referee as Referee
 import EntityScripts.Team as Team
 import EntityScripts.Tournament as Tournament
 import EntityScripts.TournamentEdition as TournamentEdition
+import EntityScripts.MatchType as MatchType
 
 from EntityScripts.TeamPlayer import team_player_insert 
 import Helper.GetCountryList as GetCountryList
@@ -25,6 +26,7 @@ def get_data(cur):
 
     Tournament.tournament_insert(cur)
     TournamentEdition.tournament_edition_insert(cur)
+    MatchType.match_type_insert(cur)
 
 
 

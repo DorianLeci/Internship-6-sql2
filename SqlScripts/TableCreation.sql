@@ -81,10 +81,21 @@ CREATE TABLE tournament_edition(
 	tournament_edition_id SERIAL PRIMARY KEY,
 	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
-
+	num_of_teams INT NOT NULL,
 	tournament_id INT NOT NULL REFERENCES tournament(tournament_id),
 	location_id INT NOT NULL REFERENCES tournament_location(location_id)
 );
+
+CREATE TYPE tournament_phase AS ENUM('group_stage','round_of_64','round_of_32','round_of_16','quarterfinal','semifinal','final','third_place');
+CREATE TABLE match_type(
+	match_type_id SERIAL PRIMARY KEY,
+	phase tournament_phase NOT NULL,
+	number_of_teams INT NOT NULL,
+
+	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id)
+	
+);
+
 
 
 
