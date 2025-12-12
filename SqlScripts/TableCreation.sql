@@ -68,7 +68,24 @@ CREATE TABLE team_player(
 );
 
 ALTER TABLE team_player
-ADD CONSTRAINT team_player_unique UNIQUE(team_id,player_id)
+ADD CONSTRAINT team_player_unique UNIQUE(team_id,player_id);
+
+CREATE TABLE tournament(
+	tournament_id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL,
+	foundation_year INT NOT NULL,
+	description TEXT
+);
+
+CREATE TABLE tournament_edition(
+	tournament_edition_id SERIAL PRIMARY KEY,
+	start_date DATE NOT NULL,
+	end_date DATE NOT NULL,
+
+	tournament_id INT NOT NULL REFERENCES tournament(tournament_id),
+	location_id INT NOT NULL REFERENCES tournament_location(location_id)
+);
+
 
 
 

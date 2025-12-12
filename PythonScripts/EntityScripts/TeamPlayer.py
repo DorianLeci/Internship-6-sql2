@@ -32,7 +32,7 @@ def team_player_insert(cur):
                 if((chosen_team_id,chosen_player_id) in inserted_pairs):
                     continue
 
-                date_of_joining=date(2020,1,1)+timedelta(days=random.randint(0,2170))
+                date_of_joining=date(2010,1,1)+timedelta(days=random.randint(0,2170))
 
                 if random.random()<0.65:
                     date_of_departure=None
@@ -56,21 +56,16 @@ def team_player_insert(cur):
                 if(len(availible_numbers)==0):
                     continue
                 
-                team_has_captain.setdefault(chosen_team_id, False)
-
-                if not team_has_captain[chosen_team_id]:
-                    is_captain=random.random()<0.2
-
-                    if(is_captain):
-                        team_has_captain[chosen_team_id]=is_captain
-
-                else:
+                if(Overlap.has_current_captain(current_team_number,chosen_team_id,date_of_joining,date_of_departure)):
                     is_captain=False
+                
+                else:
+                    is_captain=random.random()<0.2
                     
                 chosen_shirt_number=random.choice(list(availible_numbers))
 
                 current_team_number.setdefault(chosen_team_id,[])
-                current_team_number[chosen_team_id].append((date_of_joining,date_of_departure,chosen_shirt_number))
+                current_team_number[chosen_team_id].append((date_of_joining,date_of_departure,chosen_shirt_number,is_captain))
                 
                 player_dates.setdefault(player_id,[])
                 player_dates[player_id].append((date_of_joining,date_of_departure))
@@ -88,7 +83,7 @@ def GetOccupiedShirtNumbers(current_team_number,chosen_team_id,date_of_joining,d
 
     occupied_shirt_numbers=set()
 
-    for s,e,num in current_team_number.get(chosen_team_id,[]):
+    for s,e,num,_ in current_team_number.get(chosen_team_id,[]):
 
         if Overlap.is_there_shirt_number_overlap(s,e,date_of_joining,date_of_departure):
             occupied_shirt_numbers.add(num)
