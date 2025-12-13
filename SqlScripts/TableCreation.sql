@@ -125,6 +125,19 @@ CREATE TABLE match_team(
 	score INT NOT NULL
 );
 
+CREATE TYPE event_type AS ENUM('goal','own_goal','yellow_card','red_card','substitution','penalty','assist');
+CREATE TABLE match_event(
+	match_event_id SERIAL PRIMARY KEY,
+	event event_type NOT NULL,
+	match_minute INT NOT NULL,
+
+	player_id INT NOT NULL REFERENCES player(player_id),
+	match_id INT NOT NULL REFERENCES tournament_match(match_id) ON DELETE CASCADE
+	
+);
+
+
+
 
 
 

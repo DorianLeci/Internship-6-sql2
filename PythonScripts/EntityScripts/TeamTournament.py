@@ -32,7 +32,7 @@ def team_tour_insert(cur, team_id_list):
                 WHERE tp.team_id = team.team_id
                   AND tp.date_of_joining <= %s
                   AND (tp.date_of_departure IS NULL OR tp.date_of_departure >= %s)
-            ) >= 5
+            ) >=1
             """, (team_id_list, end_date, start_date, end_date, start_date))
 
         available_teams = [row[0] for row in cur.fetchall()]

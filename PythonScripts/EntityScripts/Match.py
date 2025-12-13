@@ -22,10 +22,12 @@ def match_insert(cur):
             cur.execute("""SELECT match_type_id,phase,number_of_teams FROM match_type WHERE tournament_edition_id=%s 
                             ORDER BY CASE phase
                             WHEN 'group_stage' THEN 1
-                            WHEN 'quarterfinal' THEN 2
-                            WHEN 'semifinal' THEN 3
-                            WHEN 'third_place' THEN 4
-                            WHEN 'final' THEN 5
+                            WHEN 'round_of_32' THEN 2
+                            WHEN 'round_of_16' THEN 3
+                            WHEN 'quarterfinal' THEN 4
+                            WHEN 'semifinal' THEN 5
+                            WHEN 'third_place' THEN 6
+                            WHEN 'final' THEN 7
                             END""",(tour_edit_id,))
 
             match_types=cur.fetchall()
