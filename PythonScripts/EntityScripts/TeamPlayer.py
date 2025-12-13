@@ -1,5 +1,3 @@
-import AutoDirectory
-import json
 import random
 from psycopg2.extras import execute_values
 from datetime import date,timedelta

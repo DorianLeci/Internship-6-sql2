@@ -8,8 +8,8 @@ import EntityScripts.Tournament as Tournament
 import EntityScripts.TournamentEdition as TournamentEdition
 import EntityScripts.MatchType as MatchType
 from EntityScripts.TeamTournament import team_tour_insert
-
 import EntityScripts.Match as Match
+from EntityScripts.MatchTeam import match_team_insert
 
 from EntityScripts.TeamPlayer import team_player_insert 
 import Helper.GetCountryList as GetCountryList
@@ -36,10 +36,11 @@ def get_data(cur):
     Tournament.tournament_insert(cur)
     TournamentEdition.tournament_edition_insert(cur)
 
+    team_tour_insert(cur,team_id_list)
+    
     MatchType.match_type_insert(cur)
     Match.match_insert(cur)
-
-    team_tour_insert(cur,team_id_list)
+    match_team_insert(cur)
 
 
 

@@ -1,5 +1,3 @@
-import AutoDirectory
-import json
 from psycopg2.extras import execute_values
 from Helper import TournamentStageGenerator as Generator
 import random

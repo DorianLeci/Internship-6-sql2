@@ -48,3 +48,25 @@ def team_tour_insert(cur, team_id_list):
         "INSERT INTO public.team_tournament_edition (team_id, tournament_edition_id) VALUES %s",
         insert_values
     )
+
+    delete_editions(cur)
+    update_editions(cur)
+
+
+def delete_editions(cur):
+        cur.execute(""" DELETE FROM tournament_edition WHERE tournament_edition_id IN
+                        (SELECT tournament_edition_id
+                         FROM team_tournament_edition
+                         GROUP BY tournament_edition_id
+                         HAVING COUNT(*) NOT IN (4,8,16,32)
+                         )""")
+
+def update_editions(cur):
+     cur.execute("""UPDATE tournament_edition te
+                    SET num_of_teams=temp.num_of_teams
+                    FROM(
+                    SELECT tournament_edition_id,COUNT(*) AS num_of_teams 
+                    FROM team_tournament_edition
+                    GROUP BY tournament_edition_id
+                    )AS temp
+                    WHERE te.tournament_edition_id=temp.tournament_edition_id""")  

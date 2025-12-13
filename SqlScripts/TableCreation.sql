@@ -97,7 +97,7 @@ CREATE TABLE match_type(
 
 CREATE TABLE team_tournament_edition(
 	team_id INT NOT NULL REFERENCES team(team_id),
-	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id),
+	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id) ON DELETE CASCADE,
 
 	UNIQUE(team_id,tournament_edition_id),
 
@@ -110,8 +110,9 @@ CREATE TABLE tournament_match(
 	match_id SERIAL PRIMARY KEY,
 	date_time TIMESTAMP NOT NULL,
 	
-    match_type_id INT REFERENCES match_type(match_type_id),
-	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id)
+    match_type_id INT NOT NULL REFERENCES match_type(match_type_id),
+	referee_id INT NOT NULL REFERENCES referee(referee_id),
+	winner_id INT REFERENCES team(team_id)
 );
 
 CREATE TABLE match_team(

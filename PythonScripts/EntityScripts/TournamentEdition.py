@@ -1,5 +1,3 @@
-import AutoDirectory
-import json
 from psycopg2.extras import execute_values
 import random
 from datetime import date,timedelta
@@ -51,9 +49,4 @@ def tournament_edition_insert(cur):
 
         execute_values(cur,"INSERT INTO public.tournament_edition (start_date,end_date,num_of_teams,tournament_id,location_id) VALUES %s",insert_values)  
 
-        cur.execute(""" DELETE FROM tournament_edition WHERE tournament_edition_id IN
-                        (SELECT tournament_edition_id
-                         FROM team_tournament_edition
-                         GROUP BY tournament_edition_id
-                         HAVING COUNT(*) NOT IN (4,8,16,32)
-                         )""")
+
