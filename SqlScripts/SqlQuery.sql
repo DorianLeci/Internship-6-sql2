@@ -44,7 +44,8 @@ JOIN match_team mte2 ON mte2.match_id=mt.match_id AND mte1.team_id<mte2.team_id
 JOIN team team1 ON team1.team_id=mte1.team_id
 JOIN team team2 ON team2.team_id=mte2.team_id
 
-WHERE te.tournament_edition_id=3;
+WHERE te.tournament_edition_id=3
+ORDER BY mty.phase;
 
 
 EXPLAIN(ANALYZE,COSTS)
@@ -58,8 +59,19 @@ JOIN match_team mte1 ON mte1.match_id=mt.match_id
 JOIN match_team mte2 ON mte2.match_id=mt.match_id AND mte1.team_id<mte2.team_id 
 JOIN team team1 ON team1.team_id=mte1.team_id
 JOIN team team2 ON team2.team_id=mte2.team_id
-
 WHERE mte1.team_id=4;
+
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT mte.event,mte.match_minute,p.player_id,p.player_fname,p.player_lname
+FROM tournament_match tm
+JOIN match_event mte ON mte.match_id=tm.match_id
+JOIN player p ON p.player_id=mte.player_id
+WHERE tm.match_id=100
+ORDER BY mte.event;
+
+
+
 
 
 
