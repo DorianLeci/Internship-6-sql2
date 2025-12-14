@@ -34,16 +34,32 @@ JOIN team t ON t.team_id=tp.team_id;
 
 EXPLAIN(ANALYZE,COSTS)
 SELECT te.tournament_edition_id,mty.phase,mt.date_time AS match_time,
-mte1.score AS team1_score,mte2.score AS team2_score
+mte1.score AS team1_score,mte2.score AS team2_score,
+team1.team_id AS team1_id,team2.team_id AS team2_id,team1.team_name AS team1_name,team2.team_name AS team2_name
 FROM tournament_edition te
 JOIN match_type mty ON mty.tournament_edition_id=te.tournament_edition_id
 JOIN tournament_match mt ON mt.match_type_id=mty.match_type_id
 JOIN match_team mte1 ON mte1.match_id=mt.match_id
-JOIN match_team mte2 ON mte2.match_id=mt.match_id
+JOIN match_team mte2 ON mte2.match_id=mt.match_id AND mte1.team_id<mte2.team_id 
+JOIN team team1 ON team1.team_id=mte1.team_id
+JOIN team team2 ON team2.team_id=mte2.team_id
 
-WHERE mte1.team_id<mte2.team_id;
+WHERE te.tournament_edition_id=3;
 
 
+EXPLAIN(ANALYZE,COSTS)
+SELECT te.tournament_edition_id,mty.phase,mt.date_time AS match_time,
+mte1.score AS selected_team_score,mte2.score AS opponent_score,
+team1.team_id AS selected_team_id,team2.team_id AS opponent_id,team1.team_name AS selected_team_name,team2.team_name AS opponent_name
+FROM tournament_edition te
+JOIN match_type mty ON mty.tournament_edition_id=te.tournament_edition_id
+JOIN tournament_match mt ON mt.match_type_id=mty.match_type_id
+JOIN match_team mte1 ON mte1.match_id=mt.match_id
+JOIN match_team mte2 ON mte2.match_id=mt.match_id AND mte1.team_id<mte2.team_id 
+JOIN team team1 ON team1.team_id=mte1.team_id
+JOIN team team2 ON team2.team_id=mte2.team_id
+
+WHERE mte1.team_id=4;
 
 
 
