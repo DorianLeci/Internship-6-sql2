@@ -10,7 +10,6 @@ JOIN country c ON c.country_id=tl.country_id
 JOIN team_tournament_edition tte ON tte.tournament_edition_id=te.tournament_edition_id
 WHERE tte.stage_reached = 'Winner';
 
-
 EXPLAIN(ANALYZE,COSTS)
 SELECT t.team_id, t.team_name, t.team_email, tte.tournament_edition_id,
        tour.name, tp.player_id,p.player_fname, p.player_lname
@@ -133,7 +132,30 @@ WHERE te.tournament_edition_id = 5
 
 GROUP BY t.team_id,t.team_name,tte.stage_reached
 
-ORDER BY tte.stage_reached
+ORDER BY tte.stage_reached;
+
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT mty.phase,tm.date_time AS match_time,mw.team_id AS winner_id,ml.team_id AS runner_up_id,
+tw.team_name AS winner_name,tw.team_email AS winner_contact FROM match_type mty
+JOIN tournament_match tm ON tm.match_type_id=mty.match_type_id 
+JOIN match_team mw ON mw.match_id=tm.match_id AND mw.team_id=tm.winner_id 
+JOIN match_team ml ON ml.match_id=tm.match_id AND ml.team_id<>tm.winner_id
+JOIN team tw ON tw.team_id=tm.winner_id
+WHERE mty.phase='final';
+
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT mty.phase,COUNT(*) AS match_type_count FROM match_type mty
+GROUP BY mty.phase
+ORDER BY mty.phase;
+
+
+
+
+
+
+
 
 
 
