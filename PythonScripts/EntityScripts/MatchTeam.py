@@ -32,8 +32,6 @@ def match_team_insert(cur):
             if(len(team_list)==0):
                 continue
 
-            print("Team list len: ",len(team_list))
-
             groups=[team_list[i:i+GROUP_SIZE] for i in range(0,len(team_list),GROUP_SIZE)]
 
             generate_matches(cur,insert_values,groups,tour_edit_id,team_list)
@@ -47,7 +45,6 @@ def match_team_insert(cur):
 
 def generate_matches(cur,insert_values,groups,tour_edit_id,team_list):
 
-    print("Tournament_edition_id: ",tour_edit_id)
     cur.execute("""SELECT tm.match_id FROM tournament_match tm
                     JOIN match_type mt ON mt.match_type_id=tm.match_type_id
                     WHERE tournament_edition_id=%s
@@ -76,12 +73,11 @@ def generate_group_pairs(groups,match_list,insert_values,):
     for group in groups:
 
         all_pairs=list(combinations(group,2))
-        print("All pairs length: ",len(all_pairs))
+
         team_points={team: 0 for team in group}
 
         for team1,team2 in all_pairs:
-                
-                print(f"match_index={match_index}, match_list_len={len(match_list)}")               
+                             
                 match_id=match_list[match_index]
 
                 team1_score=random.randint(0,MAX_SCORED_GOALS)
@@ -108,8 +104,7 @@ def generate_knockout_pairs(qual_teams,insert_values,match_list,match_index,knoc
         semifinal_losers=[]
 
         for phase in knockout_phases:
-            print("Phase: ",phase)
-            print(f"match_index={match_index}, match_list_len={len(match_list)}")   
+  
             if phase=="third_place":
                 curr_round_pairs=[(semifinal_losers[0],semifinal_losers[1])]
             else:

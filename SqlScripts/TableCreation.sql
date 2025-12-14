@@ -81,6 +81,8 @@ CREATE TABLE tournament_edition(
 	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
 	num_of_teams INT NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	tournament_id INT NOT NULL REFERENCES tournament(tournament_id),
 	location_id INT NOT NULL REFERENCES tournament_location(location_id)
 );
@@ -90,6 +92,8 @@ CREATE TABLE match_type(
 	match_type_id SERIAL PRIMARY KEY,
 	phase tournament_phase NOT NULL,
 	number_of_teams INT NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
 	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id) ON DELETE CASCADE
 	
@@ -101,7 +105,9 @@ CREATE TABLE team_tournament_edition(
 	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id) ON DELETE CASCADE,
 
 	UNIQUE(team_id,tournament_edition_id),
-
+	
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	number_of_wins INT DEFAULT 0,
 	stage_reached ranking DEFAULT NULL
 );
@@ -112,6 +118,8 @@ CREATE TABLE tournament_match(
 	
     match_type_id INT NOT NULL REFERENCES match_type(match_type_id),
 	referee_id INT NOT NULL REFERENCES referee(referee_id),
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	winner_id INT REFERENCES team(team_id)
 );
 
@@ -121,6 +129,8 @@ CREATE TABLE match_team(
 	team_id INT NOT NULL REFERENCES team(team_id),
 	
 	UNIQUE(match_id,team_id),
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	
 	score INT NOT NULL
 );
@@ -130,6 +140,8 @@ CREATE TABLE match_event(
 	match_event_id SERIAL PRIMARY KEY,
 	event event_type NULL,
 	match_minute INT NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
 	player_id INT NOT NULL REFERENCES player(player_id),
 	match_id INT NOT NULL REFERENCES tournament_match(match_id) ON DELETE CASCADE
