@@ -42,6 +42,8 @@ def match_team_insert(cur):
 
         update_winner(cur)
 
+        caluclate_team_stats(cur)
+
 
 def generate_matches(cur,insert_values,groups,tour_edit_id,team_list):
 
@@ -177,9 +179,65 @@ def update_winner(cur):
                 FROM match_team mt1
                  
                 JOIN match_team mt2 ON mt2.match_id=mt1.match_id
-                WHERE mt1.team_id<>mt2.team_id
+                WHERE mt1.team_id<>mt2.team_id AND mt1.team_id < mt2.team_id
                 ) AS temp
                  
                 WHERE tm.match_id=temp.match_id""")
+
+def caluclate_team_stats(cur):
+
+   cur.execute("""UPDATE team_tournament_edition tte
+                    SET number_of_wins=temp.num_of_wins
+                    FROM(
+                    SELECT tm.winner_id,mt.tournament_edition_id,COUNT(*) as num_of_wins
+                    FROM tournament_match tm
+                    JOIN match_type mt ON mt.match_type_id=tm.match_type_id
+                    WHERE winner_id IS NOT NULL
+                    GROUP BY tm.winner_id,tournament_edition_id
+                    ) AS temp
+                    WHERE tte.team_id=temp.winner_id AND temp.tournament_edition_id=tte.tournament_edition_id""")
+   
+   cur.execute("""UPDATE team_tournament_edition tte
+                    SET stage_reached=CASE
+
+                        WHEN EXISTS(
+                        SELECT 1
+                        FROM match_team mt
+                        JOIN tournament_match tm ON tm.match_id=mt.match_id
+                        JOIN match_type mty ON mty.match_type_id=tm.match_type_id
+                        WHERE mty.phase='final' AND mt.team_id=tm.winner_id
+                        AND tte.tournament_edition_id=mty.tournament_edition_id
+                        AND mt.team_id = tte.team_id
+                        ) THEN 'Winner'::ranking
+
+                        WHEN EXISTS(
+                        SELECT 1
+                        FROM match_team mt
+                        JOIN tournament_match tm ON tm.match_id=mt.match_id
+                        JOIN match_type mty ON mty.match_type_id=tm.match_type_id
+                        WHERE mty.phase='final' AND mt.team_id!=tm.winner_id
+                        AND tte.tournament_edition_id=mty.tournament_edition_id
+                        AND mt.team_id = tte.team_id) THEN 'Runner-Up'::ranking
+
+                        WHEN EXISTS(
+                        SELECT 1
+                        FROM match_team mt
+                        JOIN tournament_match tm ON tm.match_id=mt.match_id
+                        JOIN match_type mty ON mty.match_type_id=tm.match_type_id
+                        WHERE mty.phase='third_place' AND mt.team_id=tm.winner_id
+                        AND tte.tournament_edition_id=mty.tournament_edition_id
+                        AND mt.team_id = tte.team_id) THEN 'Third Place'::ranking
+
+                        WHEN EXISTS(
+                        SELECT 1
+                        FROM match_team mt
+                        JOIN tournament_match tm ON tm.match_id=mt.match_id
+                        JOIN match_type mty ON mty.match_type_id=tm.match_type_id
+                        WHERE mty.phase IN ('round_of_32','round_of_16','quarterfinal','semifinal')
+                        AND tte.tournament_edition_id=mty.tournament_edition_id
+                        AND mt.team_id = tte.team_id) THEN 'Knockout Phase'::ranking
+
+                        ELSE 'Group Stage'::ranking
+                    END""")
      
 

@@ -95,6 +95,7 @@ CREATE TABLE match_type(
 	
 );
 
+CREATE TYPE ranking AS ENUM('Winner','Runner-Up','Third Place','Knockout Phase','Group Stage');
 CREATE TABLE team_tournament_edition(
 	team_id INT NOT NULL REFERENCES team(team_id),
 	tournament_edition_id INT NOT NULL REFERENCES tournament_edition(tournament_edition_id) ON DELETE CASCADE,
@@ -102,8 +103,7 @@ CREATE TABLE team_tournament_edition(
 	UNIQUE(team_id,tournament_edition_id),
 
 	number_of_wins INT DEFAULT 0,
-	ranking INT DEFAULT NULL,
-	stage_reached tournament_phase DEFAULT NULL
+	stage_reached ranking DEFAULT NULL
 );
 
 CREATE TABLE tournament_match(
@@ -128,13 +128,14 @@ CREATE TABLE match_team(
 CREATE TYPE event_type AS ENUM('goal','own_goal','yellow_card','red_card','substitution','penalty','assist');
 CREATE TABLE match_event(
 	match_event_id SERIAL PRIMARY KEY,
-	event event_type NOT NULL,
+	event event_type NULL,
 	match_minute INT NOT NULL,
 
 	player_id INT NOT NULL REFERENCES player(player_id),
 	match_id INT NOT NULL REFERENCES tournament_match(match_id) ON DELETE CASCADE
 	
 );
+
 
 
 
