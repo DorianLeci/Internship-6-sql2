@@ -56,7 +56,7 @@ FROM tournament_edition te
 JOIN match_type mty ON mty.tournament_edition_id=te.tournament_edition_id
 JOIN tournament_match mt ON mt.match_type_id=mty.match_type_id
 JOIN match_team mte1 ON mte1.match_id=mt.match_id
-JOIN match_team mte2 ON mte2.match_id=mt.match_id AND mte1.team_id<mte2.team_id 
+JOIN match_team mte2 ON mte2.match_id=mt.match_id AND mte1.team_id!=mte2.team_id 
 JOIN team team1 ON team1.team_id=mte1.team_id
 JOIN team team2 ON team2.team_id=mte2.team_id
 WHERE mte1.team_id=4;
@@ -102,6 +102,38 @@ GROUP BY player_name,t.team_name
 
 ORDER BY goals_scored DESC;
 
+
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT 
+	t.team_id,
+	t.team_name,
+	SUM(
+		CASE
+			WHEN mty.phase='group_stage' AND mte.score>opp.score THEN 3
+			WHEN mty.phase='group_stage' AND mte.score=opp.score THEN 1
+			ELSE 0
+		END
+			
+	)AS team_points,
+	
+	SUM(mte.score - opp.score) AS goal_difference,
+	SUM(mte.score) AS goals_scored,
+	SUM(opp.score) AS goals_conceded,
+	tte.stage_reached
+	
+FROM tournament_edition te
+JOIN match_type mty ON mty.tournament_edition_id = te.tournament_edition_id
+JOIN tournament_match tm ON tm.match_type_id = mty.match_type_id
+JOIN match_team mte ON mte.match_id=tm.match_id
+JOIN match_team opp ON opp.match_id=tm.match_id AND mte.team_id!=opp.team_id
+JOIN team t ON t.team_id=mte.team_id
+JOIN team_tournament_edition tte ON tte.team_id=mte.team_id AND tte.tournament_edition_id=te.tournament_edition_id
+WHERE te.tournament_edition_id = 5
+
+GROUP BY t.team_id,t.team_name,tte.stage_reached
+
+ORDER BY tte.stage_reached
 
 
 

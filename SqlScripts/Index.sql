@@ -29,3 +29,4 @@ CREATE INDEX idx_match_type_tour_phase ON match_type(tournament_edition_id,phase
 CREATE INDEX idx_team_player_player_id ON team_player(player_id);
 
 
+
