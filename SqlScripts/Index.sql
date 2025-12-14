@@ -20,8 +20,12 @@ ON tournament_match(match_type_id);
 
 CREATE INDEX idx_match_team_match_team_id ON match_team(match_id,team_id);
 
-CREATE INDEX idx_match_event_match_id ON match_event(match_id);
+
+CREATE INDEX idx_match_event_match_id_event_type ON match_event(match_id,event);
+
 
 CREATE INDEX idx_match_type_tour_phase ON match_type(tournament_edition_id,phase);
+
+CREATE INDEX idx_team_player_player_id ON team_player(player_id);
 
 

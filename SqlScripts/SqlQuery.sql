@@ -70,6 +70,38 @@ JOIN player p ON p.player_id=mte.player_id
 WHERE tm.match_id=100
 ORDER BY mte.event;
 
+EXPLAIN(ANALYZE,COSTS)
+SELECT p.player_fname,p.player_lname,t.team_id,t.team_name AS team_name,
+me.event,me.match_minute,tm.match_id,tm.date_time AS match_time,mty.phase
+FROM tournament_edition te
+JOIN match_type mty ON mty.tournament_edition_id = te.tournament_edition_id
+JOIN tournament_match tm ON tm.match_type_id = mty.match_type_id
+JOIN match_event me ON me.match_id = tm.match_id
+JOIN player p ON p.player_id=me.player_id
+JOIN team_player tp ON tp.player_id=p.player_id
+JOIN team t ON t.team_id=tp.team_id
+WHERE te.tournament_edition_id=1 AND me.event IN ('yellow_card','red_card')
+
+ORDER BY tm.date_time,me.match_minute;
+
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT p.player_fname || ' ' || p.player_lname AS player_name,
+t.team_name,
+COUNT(*) as goals_scored
+
+FROM tournament_edition te
+JOIN match_type mty ON mty.tournament_edition_id = te.tournament_edition_id
+JOIN tournament_match tm ON tm.match_type_id = mty.match_type_id
+JOIN match_event me ON me.match_id = tm.match_id
+JOIN player p ON p.player_id=me.player_id
+JOIN team_player tp ON tp.player_id=p.player_id
+JOIN team t ON t.team_id=tp.team_id
+WHERE te.tournament_edition_id=2 AND me.event='goal'
+GROUP BY player_name,t.team_name
+
+ORDER BY goals_scored DESC;
+
 
 
 
