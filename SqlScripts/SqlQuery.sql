@@ -183,12 +183,64 @@ ORDER BY goals_scored DESC;
 
 
 
+EXPLAIN(ANALYZE,COSTS)
+SELECT t.team_id,t.team_name,
+te.tournament_edition_id,EXTRACT(YEAR FROM te.start_date) AS tournament_year,
+tte.stage_reached 
+FROM team_tournament_edition tte
+JOIN tournament_edition te ON te.tournament_edition_id=tte.tournament_edition_id
+JOIN team t ON t.team_id=tte.team_id
+WHERE t.team_id=30
+
+ORDER BY tournament_year;
+
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT tte.tournament_edition_id,t.team_id AS tournament_winner_id,t.team_name AS tournament_winner_name,
+t.country_id,c.country_name
+FROM team_tournament_edition tte 
+JOIN team t ON t.team_id=tte.team_id
+JOIN country c ON c.country_id=t.country_id
+WHERE tte.stage_reached='Winner';
 
 
 
+EXPLAIN(ANALYZE,COSTS)
+SELECT t.name,te.tournament_edition_id,
+COUNT(tte.team_id) AS num_of_teams,
+COUNT(tp.player_id) AS num_of_players
+FROM team_tournament_edition tte
+JOIN tournament_edition te ON te.tournament_edition_id=tte.tournament_edition_id
+JOIN tournament t ON t.tournament_id=te.tournament_id
+JOIN team_player tp ON tp.team_id=tte.team_id
+GROUP BY t.name,te.tournament_edition_id;
 
 
+EXPLAIN(ANALYZE,COSTS)
+WITH player_goals AS (SELECT tp.team_id,tp.player_id,COUNT(*) AS goals_scored
+FROM team_tournament_edition tte
+JOIN team_player tp ON tp.team_id=tte.team_id
+JOIN match_type mty ON mty.tournament_edition_id=tte.tournament_edition_id
+JOIN tournament_match tm ON tm.match_type_id=mty.match_type_id
+JOIN match_event mev ON mev.match_id=tm.match_id
+WHERE mev.event='goal' AND mev.player_id=tp.player_id
+GROUP BY tp.team_id,tp.player_id
+)
 
+SELECT DISTINCT ON(pg.team_id)
+pg.team_id,p.player_id,p.player_fname || ' ' || p.player_lname AS player_name,pg.goals_scored
+FROM player_goals pg
+JOIN player p ON pg.player_id=p.player_id
+
+ORDER BY pg.team_id,pg.goals_scored DESC;
+
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT tm.match_id,r.referee_id,r.referee_fname|| ' '||r.referee_lname AS referee_name,r.birth_date,r.licence
+FROM tournament_match tm
+JOIN referee r ON r.referee_id=tm.referee_id
+WHERE r.referee_id=30
+ORDER BY r.referee_id;
 
 
 

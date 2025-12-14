@@ -22,5 +22,6 @@ DROP INDEX IF EXISTS idx_match_type_tour_phase;
 
 DROP INDEX IF EXISTS idx_team_player_player_id;
 
+DROP INDEX IF EXISTS idx_team_tournament_covering;
 
-
+DROP INDEX IF EXISTS idx_tournament_match_referee_id;
