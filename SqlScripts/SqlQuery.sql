@@ -151,6 +151,37 @@ GROUP BY mty.phase
 ORDER BY mty.phase;
 
 
+EXPLAIN(ANALYZE,COSTS)
+SELECT tm.match_id,tm.date_time AS match_time,
+mty.phase,
+tw.team_id AS winner_id,
+tw.team_name AS winner_name,
+t2.team_id AS team2_id,
+t2.team_name AS team2_name,
+mte1.score AS winner_score,
+mte2.score AS team2_score
+FROM tournament_match tm
+JOIN match_type mty ON mty.match_type_id=tm.match_type_id
+JOIN match_team mte1 ON mte1.match_id=tm.match_id AND mte1.team_id=tm.winner_id
+JOIN match_team mte2 ON mte2.match_id=tm.match_id AND mte2.team_id<>tm.winner_id
+JOIN team tw ON tw.team_id=mte1.team_id
+JOIN team t2 ON t2.team_id=mte2.team_id
+
+WHERE tm.date_time::date= DATE '2023-10-10'
+ORDER BY match_time;
+
+EXPLAIN(ANALYZE,COSTS)
+SELECT p.player_id, p.player_fname || ' ' || p.player_lname AS player_name,COUNT(*) AS goals_scored
+FROM match_event mev
+JOIN player p ON p.player_id=mev.player_id
+JOIN tournament_match tm ON tm.match_id=mev.match_id
+JOIN match_type mty ON mty.match_type_id=tm.match_type_id
+WHERE mev.event='goal' AND mty.tournament_edition_id=20
+GROUP BY p.player_id,player_name
+
+ORDER BY goals_scored DESC;
+
+
 
 
 
