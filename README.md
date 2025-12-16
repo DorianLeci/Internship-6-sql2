@@ -24,7 +24,7 @@ Internship-6-sql2
 ```
 You can create tables and insert data into database in two ways
 
-1)After creating database with given name,right click on it then find Restore in the menu.After clicking on Restore in folder <b>Backup</b>,find file "Internship-6-sql2-backup.sql" which is database backup and click ok.
+1)After creating database with given name,right click on it then find Restore in the menu.After clicking on Restore,in folder <b>Backup</b> find file "Internship-6-sql2-backup.sql" which is database backup and click Select.
 (If you can not find file-in file explorer click on SQL File so it searches for right file type).This step is done in PgAdmin.
 </br>
 
