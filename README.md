@@ -15,7 +15,7 @@ Inside there is
 </br>
 3)<b>Index.sql</b> for creating indexes on table attributes.
 </br>
-4)<b>IDropndex.sql</b> for deleteing created indexes.This is useful for running query with and without index to compare execution time and other stats.
+4)<b>DropIndex.sql</b> for deleteing created indexes.This is useful for running query with and without index to compare execution time and other stats.
 </br>
 
 Before creating any of tables or inserting data,you must create database with name 
